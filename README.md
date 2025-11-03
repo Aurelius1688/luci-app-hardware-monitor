@@ -4,7 +4,8 @@
 
 运行 make menuconfig 选择 LuCI → Applications → luci-app-hardware-monitor
 
-编译并安装包
+编译安装包
+命令: make package/luci-app-hardware-monitor/compile V=s -j8
 
 特性：
 实时监控：CPU负载、内存使用率、网络状态、防火墙状态
