@@ -1,4 +1,4 @@
-安装和配置说明
+#安装和配置说明
 安装方法：
 将整个 luci-app-hardware-monitor 目录放入 OpenWrt 的 package 目录中
 
