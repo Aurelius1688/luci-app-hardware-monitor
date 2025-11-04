@@ -261,7 +261,7 @@ make package/luci-app-hardware-monitor/compile V=s
 ```text
 MIT License
 
-Copyright (c) 2024 luci-app-hardware-monitor
+Copyright (c) 2025 luci-app-hardware-monitor
 
 Permission is hereby granted...
 ```
