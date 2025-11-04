@@ -272,10 +272,10 @@ Permission is hereby granted...
 
 ## 📞 支持与联系
 
-- **项目主页**: https://github.com/your-repo/luci-app-hardware-monitor
-- **问题反馈**: https://github.com/your-repo/luci-app-hardware-monitor/issues
-- **文档**: https://github.com/your-repo/luci-app-hardware-monitor/wiki
+- **项目主页**: https://github.com/Aurelius1688/luci-app-hardware-monitor/
+- **问题反馈**: https://github.com/Aurelius1688/luci-app-hardware-monitor/issues
+- **文档**: https://github.com/aurelius/luci-app-hardware-monitor/wiki
 
 ---
 
-*让 OpenWrt 硬件监控变得更简单！* 🚀硬件监控解决方案，具有现代化的用户界面和实时数据更新功能。
+*让 OpenWrt 硬件监控变得更简单！* 🚀一个简单的硬件监控解决方案，具有现代化的用户界面和实时数据更新功能。
