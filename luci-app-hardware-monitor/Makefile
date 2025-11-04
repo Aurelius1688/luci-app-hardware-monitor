@@ -5,7 +5,7 @@ LUCI_DEPENDS:=+luci-compat +luci-lib-ipkg +iptables +netstat-nat
 
 PKG_NAME:=luci-app-hardware-monitor
 PKG_VERSION:=1.1
-PKG_RELEASE:=2
+PKG_RELEASE:=1
 
 include $(INCLUDE_DIR)/package.mk
 
