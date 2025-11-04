@@ -50,7 +50,7 @@ luci-app-hardware-monitor/
 1. **克隆或下载插件源码**
 ```bash
 cd /path/to/openwrt/package
-git clone https://github.com/your-repo/luci-app-hardware-monitor.git
+git clone https://github.com/Aurelius1688/luci-app-hardware-monitor.git
 ```
 
 2. **配置编译选项**
@@ -87,7 +87,7 @@ ssh root@192.168.1.1 "/etc/init.d/uhttpd restart"
 
 1. **下载预编译IPK**
 ```bash
-wget https://github.com/your-repo/luci-app-hardware-monitor/releases/download/v1.1/luci-app-hardware-monitor_1.1-1_all.ipk
+wget https://github.com/Aurelius1688/luci-app-hardware-monitor/releases/download/v1.1/luci-app-hardware-monitor_1.1-1_all.ipk
 ```
 
 2. **安装依赖**
@@ -274,8 +274,7 @@ Permission is hereby granted...
 
 - **项目主页**: https://github.com/Aurelius1688/luci-app-hardware-monitor/
 - **问题反馈**: https://github.com/Aurelius1688/luci-app-hardware-monitor/issues
-- **文档**: https://github.com/aurelius/luci-app-hardware-monitor/wiki
-
+- **文档**: https://github.com/aurelius/luci-app-hardware-monitor/README.md
 ---
 
 *让 OpenWrt 硬件监控变得更简单！* 🚀一个简单的硬件监控解决方案，具有现代化的用户界面和实时数据更新功能。
