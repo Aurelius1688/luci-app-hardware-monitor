@@ -249,7 +249,7 @@ tar xf openwrt-sdk-*.tar.xz
 cd openwrt-sdk-*
 
 # 3. 克隆插件源码
-git clone https://github.com/your-repo/luci-app-hardware-monitor.git package/luci-app-hardware-monitor
+git clone https://github.comAurelius1688/luci-app-hardware-monitor.git package/luci-app-hardware-monitor
 
 # 4. 编译
 make package/luci-app-hardware-monitor/compile V=s
