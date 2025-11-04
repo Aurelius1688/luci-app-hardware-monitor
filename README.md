@@ -1,3 +1,5 @@
+<img width="1903" height="799" alt="image" src="https://github.com/user-attachments/assets/031816ee-be68-48ea-a10f-96c75edce023" />
+
 安装和配置说明
 安装方法：
 将整个 luci-app-hardware-monitor 目录放入 OpenWrt 的 package 目录中
