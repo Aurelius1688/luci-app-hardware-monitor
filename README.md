@@ -1,34 +1,281 @@
 <img width="1903" height="799" alt="image" src="https://github.com/user-attachments/assets/031816ee-be68-48ea-a10f-96c75edce023" />
 
-安装和配置说明
-安装方法：
-将整个 luci-app-hardware-monitor 目录放入 OpenWrt 的 package 目录中
+# LuCI 硬件监控插件 - 开源文档
 
-运行 make menuconfig 选择 LuCI → Applications → luci-app-hardware-monitor
+## 📋 项目概述
 
-编译安装包
-命令: make package/luci-app-hardware-monitor/compile V=s -j8
+**luci-app-hardware-monitor** 是一个为 OpenWrt 系统设计的全平台硬件监控插件，提供实时的系统状态监控和美观的用户界面。
 
-特性：
-实时监控：CPU负载、内存使用率、网络状态、防火墙状态
+### ✨ 功能特性
+- 🖥️ 实时 CPU 负载监控
+- 💾 内存使用率监控  
+- 🌐 网络连接状态检测
+- 🛡️ 防火墙安全状态监控
+- 🎨 现代化暗色主题界面
+- 🔄 5秒自动刷新
+- 📱 响应式设计
 
-自动刷新：每5秒自动更新状态（可配置）
+## 🗂️ 项目结构
 
-响应式设计：适配桌面和移动设备
+```
+luci-app-hardware-monitor/
+├── Makefile                          # 编译配置文件
+├── luasrc/
+│   ├── controller/
+│   │   └── hardware_monitor.lua      # 控制器逻辑
+│   ├── model/
+│   │   └── cbi/
+│   │       └── hardware_monitor/
+│   │           └── overview.lua      # 配置页面模型
+│   └── view/
+│       └── hardware_monitor/
+│           ├── overview.htm          # 主监控界面
+│           └── status_data.htm       # JSON数据接口
+└── root/
+    └── www/
+        └── cgi-bin/
+            └── luci-static/
+                └── hardware_monitor/
+                    └── style.css     # 样式文件(可选)
+```
 
-安全检测：防火墙活动监控和安全评分
+## 🛠️ 安装和编译指南
 
-可视化展示：彩色进度条和状态指示器
+### 环境要求
+- OpenWrt 19.07 或更高版本
+- 支持所有硬件架构 (x86, ARM, MIPS等)
 
-快速操作：一键访问系统设置和重启功能
+### 方法一：源码集成编译
 
-兼容性：
-支持所有OpenWrt版本（19.07+）
+1. **克隆或下载插件源码**
+```bash
+cd /path/to/openwrt/package
+git clone https://github.com/your-repo/luci-app-hardware-monitor.git
+```
 
-兼容各种硬件架构
+2. **配置编译选项**
+```bash
+make menuconfig
+```
+导航到：
+```
+LuCI → Applications → luci-app-hardware-monitor
+```
+选择 `[*]` 编译进固件或 `[M]` 编译为模块
 
-支持多种Luci主题
+3. **编译插件**
+```bash
+# 单独编译插件
+make package/luci-app-hardware-monitor/compile V=s
 
-不依赖特定硬件特性
+# 或编译整个固件
+make V=s
+```
 
-这个插件提供了完整的硬件监控解决方案，具有现代化的用户界面和实时数据更新功能。
+4. **安装到路由器**
+```bash
+# 找到生成的IPK文件
+find bin -name "luci-app-hardware-monitor*.ipk" -type f
+
+# 上传并安装
+scp luci-app-hardware-monitor_1.1-1_all.ipk root@192.168.1.1:/tmp/
+ssh root@192.168.1.1 "opkg install /tmp/luci-app-hardware-monitor_1.1-1_all.ipk"
+ssh root@192.168.1.1 "/etc/init.d/uhttpd restart"
+```
+
+### 方法二：手动安装（已有OpenWrt系统）
+
+1. **下载预编译IPK**
+```bash
+wget https://github.com/your-repo/luci-app-hardware-monitor/releases/download/v1.1/luci-app-hardware-monitor_1.1-1_all.ipk
+```
+
+2. **安装依赖**
+```bash
+opkg update
+opkg install luci-compat iptables netstat-nat
+```
+
+3. **安装插件**
+```bash
+opkg install luci-app-hardware-monitor_1.1-1_all.ipk
+/etc/init.d/uhttpd restart
+```
+
+## 🔧 配置文件说明
+
+### Makefile 配置
+```makefile
+include $(TOPDIR)/rules.mk
+
+LUCI_TITLE:=Hardware Monitor - 系统硬件监控
+LUCI_DEPENDS:=+luci-compat +luci-lib-ipkg +iptables +netstat-nat
+
+PKG_NAME:=luci-app-hardware-monitor
+PKG_VERSION:=1.1
+PKG_RELEASE:=1
+
+include $(INCLUDE_DIR)/package.mk
+
+define Package/$(PKG_NAME)
+  SECTION:=luci
+  CATEGORY:=LuCI
+  SUBMENU:=3. Applications
+  TITLE:=Hardware Monitor for OpenWrt
+  PKGARCH:=all
+endef
+```
+
+### 控制器 (hardware_monitor.lua)
+```lua
+module("luci.controller.hardware_monitor", package.seeall)
+
+function index()
+    entry({"admin", "status", "hardware_monitor"}, firstchild(), _("Hardware Monitor"), 60)
+    entry({"admin", "status", "hardware_monitor", "overview"}, template("hardware_monitor/overview"), _("Overview"), 1)
+    entry({"admin", "status", "hardware_monitor", "status_data"}, call("get_status_data")).leaf = true
+end
+```
+
+## 🎯 使用指南
+
+### 访问插件
+1. 登录 LuCI Web 界面
+2. 导航到：**状态 → Hardware Monitor → Overview**
+3. 或直接访问：`http://192.168.1.1/cgi-bin/luci/admin/status/hardware_monitor/overview`
+
+### 监控指标说明
+
+#### CPU 状态
+- **监控项**: 系统负载百分比
+- **阈值**:
+  - 🟢 正常: < 60%
+  - 🟡 警告: 60% - 80%
+  - 🔴 危险: > 80%
+
+#### 内存状态  
+- **监控项**: 内存使用率
+- **阈值**:
+  - 🟢 正常: < 60%
+  - 🟡 警告: 60% - 80%
+  - 🔴 危险: > 80%
+
+#### 网络状态
+- **监控项**: 互联网连接状态
+- **检测方式**: Ping 223.5.5.5 (阿里云DNS)
+
+#### 安全状态
+- **评分规则** (3分制，分数越高越安全):
+  - 3分 🟢 优秀: 所有指标正常
+  - 2分 🟡 良好: 1个指标异常  
+  - 1分 🔴 需关注: 2个指标异常
+  - 0分 🔴 危险: 3个指标异常
+
+- **监控指标**:
+  - 丢弃包数量 > 50
+  - 端口扫描次数 > 3
+  - 异常连接数 > 10
+
+## 🔄 API 接口
+
+### 获取状态数据
+**端点**: `/cgi-bin/luci/admin/status/hardware_monitor/status_data`
+
+**响应格式** (JSON):
+```json
+{
+  "load_percentage": 15,
+  "memory_usage": 42,
+  "has_network": true,
+  "drop_packets": 12,
+  "port_scan": 0,
+  "abnormal_conn": 3,
+  "timestamp": 1634567890
+}
+```
+
+## 🐛 故障排除
+
+### 常见问题
+
+1. **插件未显示在菜单中**
+   ```bash
+   # 清理缓存
+   rm -rf /tmp/luci-*
+   /etc/init.d/uhttpd restart
+   ```
+
+2. **编译错误**
+   - 确保在 `make menuconfig` 中正确选择插件
+   - 检查依赖包是否可用
+
+3. **界面显示异常**
+   - 强制刷新浏览器缓存 (Ctrl+F5)
+   - 检查 JavaScript 控制台错误信息
+
+4. **数据不更新**
+   - 检查网络连接
+   - 验证 `/proc` 文件系统权限
+
+### 日志查看
+```bash
+# 查看系统日志
+logread | grep hardware
+
+# 查看LuCI错误
+tail -f /tmp/luci-indexcache
+```
+
+## 🤝 贡献指南
+
+### 报告问题
+1. 在 GitHub Issues 中描述问题
+2. 提供 OpenWrt 版本和硬件信息
+3. 包含相关日志和截图
+
+### 提交代码
+1. Fork 项目仓库
+2. 创建功能分支
+3. 提交清晰的 commit 信息
+4. 发起 Pull Request
+
+### 开发环境设置
+```bash
+# 1. 获取 OpenWrt SDK
+wget https://downloads.openwrt.org/releases/21.02.0/targets/x86/64/openwrt-sdk-21.02.0-x86-64_gcc-8.4.0_musl.Linux-x86_64.tar.xz
+
+# 2. 解压并设置环境
+tar xf openwrt-sdk-*.tar.xz
+cd openwrt-sdk-*
+
+# 3. 克隆插件源码
+git clone https://github.com/your-repo/luci-app-hardware-monitor.git package/luci-app-hardware-monitor
+
+# 4. 编译
+make package/luci-app-hardware-monitor/compile V=s
+```
+
+## 📄 许可证
+
+本项目采用 MIT 许可证：
+```text
+MIT License
+
+Copyright (c) 2024 luci-app-hardware-monitor
+
+Permission is hereby granted...
+```
+
+## 🙏 致谢
+
+感谢 OpenWrt 社区和所有贡献者！
+
+## 📞 支持与联系
+
+- **项目主页**: https://github.com/your-repo/luci-app-hardware-monitor
+- **问题反馈**: https://github.com/your-repo/luci-app-hardware-monitor/issues
+- **文档**: https://github.com/your-repo/luci-app-hardware-monitor/wiki
+
+---
+
+*让 OpenWrt 硬件监控变得更简单！* 🚀硬件监控解决方案，具有现代化的用户界面和实时数据更新功能。
