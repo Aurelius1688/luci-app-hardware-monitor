@@ -87,7 +87,7 @@ ssh root@192.168.1.1 "/etc/init.d/uhttpd restart"
 
 1. **下载预编译IPK**
 ```bash
-wget https://github.com/Aurelius1688/luci-app-hardware-monitor/releases/download/v1.1/luci-app-hardware-monitor_1.1-1_all.ipk
+wget https://github.com/Aurelius1688/luci-app-hardware-monitor/releases/download/ZIP/luci-app-hardware-monitor_1.1-2_all.ipk
 ```
 
 2. **安装依赖**
@@ -98,7 +98,7 @@ opkg install luci-compat iptables netstat-nat
 
 3. **安装插件**
 ```bash
-opkg install luci-app-hardware-monitor_1.1-1_all.ipk
+opkg install luci-app-hardware-monitor_1.1-2_all.ipk
 /etc/init.d/uhttpd restart
 ```
 
