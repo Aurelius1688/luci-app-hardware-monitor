@@ -1,0 +1,568 @@
+<%+header%>
+
+<style>
+.status-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.status-card {
+    background: linear-gradient(145deg, #2d3748, #4a5568);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    border-left: 6px solid;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+}
+
+.status-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+}
+
+.status-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+}
+
+.status-card.cpu { 
+    border-left-color: #10b981;
+    background: linear-gradient(145deg, #1f2937, #374151);
+}
+.status-card.memory { 
+    border-left-color: #3b82f6;
+    background: linear-gradient(145deg, #1f2937, #374151);
+}
+.status-card.network { 
+    border-left-color: #8b5cf6;
+    background: linear-gradient(145deg, #1f2937, #374151);
+}
+.status-card.firewall { 
+    border-left-color: #f59e0b;
+    background: linear-gradient(145deg, #1f2937, #374151);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.card-icon {
+    width: 40px;
+    height: 40px;
+    margin-right: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.cpu-icon { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+.memory-icon { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+.network-icon { background: rgba(139, 92, 246, 0.2); color: #8b5cf6; }
+.firewall-icon { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+
+.card-header h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #f7fafc;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.metric-value {
+    font-size: 42px;
+    font-weight: bold;
+    margin: 15px 0;
+    color: #ffffff;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    font-family: 'Courier New', monospace;
+}
+
+.metric-label {
+    font-size: 14px;
+    color: #cbd5e0;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+}
+
+.progress-container {
+    background: rgba(0,0,0,0.3);
+    border-radius: 10px;
+    padding: 3px;
+    margin: 15px 0;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.progress-bar {
+    width: 100%;
+    height: 12px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 8px;
+    transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    box-shadow: 0 0 20px rgba(255,255,255,0.2);
+}
+
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 25px;
+    font-size: 13px;
+    font-weight: bold;
+    margin-top: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.badge-normal { 
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #ffffff;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+.badge-warning { 
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #ffffff;
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+}
+.badge-danger { 
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: #ffffff;
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+}
+
+.quick-actions {
+    margin: 40px 0;
+    text-align: center;
+}
+
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    margin: 0 12px;
+    padding: 14px 28px;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: white;
+    text-decoration: none;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.action-btn::before {
+    margin-right: 8px;
+    font-weight: bold;
+}
+
+.refresh-btn::before { content: "������"; }
+.system-btn::before { content: "⚙️"; }
+.network-btn::before { content: "������"; }
+.reboot-btn::before { content: "������"; }
+
+.action-btn:hover {
+    background: linear-gradient(135deg, #2563eb, #1e40af);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.5);
+}
+
+.refresh-info {
+    text-align: center;
+    color: #9ca3af;
+    font-size: 14px;
+    margin-top: 25px;
+    padding: 12px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.status-indicator {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.btn-icon {
+    margin-right: 8px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+/* 如果还是有乱码，使用纯CSS图标 */
+.action-btn.refresh-btn::before {
+    content: "↻";
+    margin-right: 8px;
+    font-weight: bold;
+}
+
+.action-btn.system-btn::before {
+    content: "⚙";
+    margin-right: 8px;
+    font-weight: bold;
+}
+
+.action-btn.network-btn::before {
+    content: "●";
+    margin-right: 8px;
+    font-weight: bold;
+}
+
+.action-btn.reboot-btn::before {
+    content: "↺";
+    margin-right: 8px;
+    font-weight: bold;
+}
+.btn-icon {
+    margin-right: 8px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+/* 如果还是有乱码，使用纯CSS图标 */
+.action-btn.refresh-btn::before {
+    content: "↻";
+    margin-right: 8px;
+    font-weight: bold;
+}
+
+.action-btn.system-btn::before {
+    content: "⚙";
+    margin-right: 8px;
+    font-weight: bold;
+}
+
+.action-btn.network-btn::before {
+    content: "●";
+    margin-right: 8px;
+    font-weight: bold;
+}
+
+.action-btn.reboot-btn::before {
+    content: "↺";
+    margin-right: 8px;
+    font-weight: bold;
+}
+
+.indicator-online { background: #10b981; box-shadow: 0 0 10px #10b981; }
+.indicator-offline { background: #ef4444; box-shadow: 0 0 10px #ef4444; }
+.indicator-warning { background: #f59e0b; box-shadow: 0 0 10px #f59e0b; }
+
+@keyframes pulse {
+    0% { 
+        opacity: 0.6;
+        transform: scale(0.98);
+    }
+    50% { 
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% { 
+        opacity: 0.6;
+        transform: scale(0.98);
+    }
+}
+
+.loading {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.loading .progress-fill {
+    background: linear-gradient(90deg, #6b7280, #9ca3af, #6b7280) !important;
+    background-size: 200% 100%;
+    animation: loadingShimmer 1.5s infinite;
+}
+
+@keyframes loadingShimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .status-cards {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .action-btn {
+        margin: 5px;
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+    
+    .metric-value {
+        font-size: 36px;
+    }
+}
+</style>
+
+<div class="cbi-map">
+    <h2 name="content" style="color: #f7fafc; text-align: center; margin-bottom: 30px; font-size: 28px;">
+        硬件监控中心
+    </h2>
+    
+    <!-- 状态卡片网格 -->
+    <div class="status-cards" id="status-cards">
+        <div class="status-card cpu loading">
+            <div class="card-header">
+                <div class="card-icon cpu-icon">CPU</div>
+                <h3>处理器状态</h3>
+            </div>
+            <div class="metric-value">--%</div>
+            <div class="metric-label">系统负载</div>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="status-card memory loading">
+            <div class="card-header">
+                <div class="card-icon memory-icon">RAM</div>
+                <h3>内存状态</h3>
+            </div>
+            <div class="metric-value">--%</div>
+            <div class="metric-label">内存使用率</div>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="status-card network loading">
+            <div class="card-header">
+                <div class="card-icon network-icon">NET</div>
+                <h3>网络状态</h3>
+            </div>
+            <div class="metric-value">--</div>
+            <div class="metric-label">互联网连接</div>
+            <div class="status-badge">检测中...</div>
+        </div>
+        
+        <div class="status-card firewall loading">
+            <div class="card-header">
+                <div class="card-icon firewall-icon">SEC</div>
+                <h3>安全状态</h3>
+            </div>
+            <div class="metric-value">--</div>
+            <div class="metric-label">防火墙防护</div>
+            <div class="status-badge">检测中...</div>
+        </div>
+    </div>
+    
+    <!-- 快速操作按钮 -->
+<div class="quick-actions">
+    <button class="action-btn refresh-btn" onclick="refreshStatus()">
+        <span class="btn-icon"></span>刷新状态
+    </button>
+    <a class="action-btn system-btn" href="<%=luci.dispatcher.build_url('admin/system/system')%>">
+        <span class="btn-icon"></span>系统设置
+    </a>
+    <a class="action-btn network-btn" href="<%=luci.dispatcher.build_url('admin/network/network')%>">
+        <span class="btn-icon"></span>网络设置
+    </a>
+    <a class="action-btn reboot-btn" href="<%=luci.dispatcher.build_url('admin/system/reboot')%>">
+        <span class="btn-icon"></span>重启系统
+    </a>
+</div>
+    
+    <!-- 刷新信息 -->
+    <div class="refresh-info" id="refresh-info">
+        <span class="status-indicator indicator-online"></span>
+        最后更新: 正在加载...
+    </div>
+</div>
+
+<script>
+let autoRefreshInterval;
+
+function updateStatusCards(data) {
+    // 移除加载动画
+    document.querySelectorAll('.loading').forEach(el => {
+        el.classList.remove('loading');
+    });
+    
+    // 更新CPU状态
+    const cpuCard = document.querySelector('.status-card.cpu');
+    const cpuValue = cpuCard.querySelector('.metric-value');
+    const cpuProgress = cpuCard.querySelector('.progress-fill');
+    const cpuPercent = data.load_percentage;
+    
+    cpuValue.textContent = cpuPercent + '%';
+    cpuProgress.style.width = cpuPercent + '%';
+    
+    // 设置CPU颜色
+    if (cpuPercent > 80) {
+        cpuProgress.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
+        cpuCard.style.borderLeftColor = '#ef4444';
+    } else if (cpuPercent > 60) {
+        cpuProgress.style.background = 'linear-gradient(135deg, #f59e0b, #d97706)';
+        cpuCard.style.borderLeftColor = '#f59e0b';
+    } else {
+        cpuProgress.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+        cpuCard.style.borderLeftColor = '#10b981';
+    }
+    
+    // 更新内存状态
+    const memoryCard = document.querySelector('.status-card.memory');
+    const memoryValue = memoryCard.querySelector('.metric-value');
+    const memoryProgress = memoryCard.querySelector('.progress-fill');
+    const memoryPercent = data.memory_usage;
+    
+    memoryValue.textContent = memoryPercent + '%';
+    memoryProgress.style.width = memoryPercent + '%';
+    
+    if (memoryPercent > 80) {
+        memoryProgress.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
+        memoryCard.style.borderLeftColor = '#ef4444';
+    } else if (memoryPercent > 60) {
+        memoryProgress.style.background = 'linear-gradient(135deg, #f59e0b, #d97706)';
+        memoryCard.style.borderLeftColor = '#f59e0b';
+    } else {
+        memoryProgress.style.background = 'linear-gradient(135deg, #3b82f6, #1d4ed8)';
+        memoryCard.style.borderLeftColor = '#3b82f6';
+    }
+    
+    // 更新网络状态
+    const networkCard = document.querySelector('.status-card.network');
+    const networkValue = networkCard.querySelector('.metric-value');
+    const networkBadge = networkCard.querySelector('.status-badge');
+    const isOnline = data.has_network;
+    
+    networkValue.innerHTML = isOnline ? 
+        '<span class="status-indicator indicator-online"></span>在线' : 
+        '<span class="status-indicator indicator-offline"></span>离线';
+    networkBadge.textContent = isOnline ? '连接正常' : '网络断开';
+    networkBadge.className = 'status-badge ' + (isOnline ? 'badge-normal' : 'badge-danger');
+    networkCard.style.borderLeftColor = isOnline ? '#10b981' : '#ef4444';
+    
+    // 更新防火墙状态
+    const firewallCard = document.querySelector('.status-card.firewall');
+    const firewallValue = firewallCard.querySelector('.metric-value');
+    const firewallBadge = firewallCard.querySelector('.status-badge');
+    
+    const securityScore = (data.drop_packets > 50 ? 1 : 0) + 
+                         (data.port_scan > 3 ? 1 : 0) + 
+                         (data.abnormal_conn > 10 ? 1 : 0);
+    
+    let firewallStatus, firewallLevel;
+    if (securityScore >= 2) {
+        firewallStatus = '危险';
+        firewallLevel = 'badge-danger';
+        firewallCard.style.borderLeftColor = '#ef4444';
+    } else if (securityScore === 1) {
+        firewallStatus = '警告';
+        firewallLevel = 'badge-warning';
+        firewallCard.style.borderLeftColor = '#f59e0b';
+    } else {
+        firewallStatus = '正常';
+        firewallLevel = 'badge-normal';
+        firewallCard.style.borderLeftColor = '#10b981';
+    }
+    
+    firewallValue.textContent = securityScore + ' 分';
+    firewallBadge.textContent = firewallStatus;
+    firewallBadge.className = 'status-badge ' + firewallLevel;
+    
+    // 更新最后刷新时间
+    const refreshInfo = document.getElementById('refresh-info');
+    refreshInfo.innerHTML = '<span class="status-indicator indicator-online"></span>' +
+        '<strong>最后更新:</strong> ' + new Date().toLocaleTimeString() + 
+        ' | <strong>自动刷新:</strong> 每5秒';
+}
+
+function loadStatus() {
+    fetch('<%=luci.dispatcher.build_url("admin/status/hardware_monitor/status_data")%>')
+        .then(response => response.json())
+        .then(data => {
+            updateStatusCards(data);
+        })
+        .catch(error => {
+            console.error('加载状态失败:', error);
+            const refreshInfo = document.getElementById('refresh-info');
+            refreshInfo.innerHTML = '<span class="status-indicator indicator-offline"></span>' +
+                '<strong>最后更新:</strong> 加载失败 - ' + new Date().toLocaleTimeString();
+        });
+}
+
+function refreshStatus() {
+    // 显示加载状态
+    document.querySelectorAll('.status-card').forEach(card => {
+        card.classList.add('loading');
+    });
+    
+    const refreshInfo = document.getElementById('refresh-info');
+    refreshInfo.innerHTML = '<span class="status-indicator indicator-warning"></span><strong>刷新中...</strong>';
+    
+    loadStatus();
+}
+
+function startAutoRefresh() {
+    // 每5秒自动刷新
+    autoRefreshInterval = setInterval(loadStatus, 5000);
+}
+
+// 页面加载完成后初始化
+document.addEventListener('DOMContentLoaded', function() {
+    loadStatus();
+    startAutoRefresh();
+});
+
+// 页面离开时清理定时器
+window.addEventListener('beforeunload', function() {
+    if (autoRefreshInterval) {
+        clearInterval(autoRefreshInterval);
+    }
+});
+</script>
+
+<%+footer%>
