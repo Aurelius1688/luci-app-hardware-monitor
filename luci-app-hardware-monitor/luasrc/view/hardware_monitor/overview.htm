@@ -199,10 +199,10 @@
     font-weight: bold;
 }
 
-.refresh-btn::before { content: "������"; }
-.system-btn::before { content: "⚙️"; }
-.network-btn::before { content: "������"; }
-.reboot-btn::before { content: "������"; }
+.refresh-btn::before { content: "↻"; }
+.system-btn::before { content: "⚙"; }
+.network-btn::before { content: "●"; }
+.reboot-btn::before { content: "↺"; }
 
 .action-btn:hover {
     background: linear-gradient(135deg, #2563eb, #1e40af);
@@ -233,61 +233,6 @@
     margin-right: 8px;
     font-weight: bold;
     display: inline-block;
-}
-
-/* 如果还是有乱码，使用纯CSS图标 */
-.action-btn.refresh-btn::before {
-    content: "↻";
-    margin-right: 8px;
-    font-weight: bold;
-}
-
-.action-btn.system-btn::before {
-    content: "⚙";
-    margin-right: 8px;
-    font-weight: bold;
-}
-
-.action-btn.network-btn::before {
-    content: "●";
-    margin-right: 8px;
-    font-weight: bold;
-}
-
-.action-btn.reboot-btn::before {
-    content: "↺";
-    margin-right: 8px;
-    font-weight: bold;
-}
-.btn-icon {
-    margin-right: 8px;
-    font-weight: bold;
-    display: inline-block;
-}
-
-/* 如果还是有乱码，使用纯CSS图标 */
-.action-btn.refresh-btn::before {
-    content: "↻";
-    margin-right: 8px;
-    font-weight: bold;
-}
-
-.action-btn.system-btn::before {
-    content: "⚙";
-    margin-right: 8px;
-    font-weight: bold;
-}
-
-.action-btn.network-btn::before {
-    content: "●";
-    margin-right: 8px;
-    font-weight: bold;
-}
-
-.action-btn.reboot-btn::before {
-    content: "↺";
-    margin-right: 8px;
-    font-weight: bold;
 }
 
 .indicator-online { background: #10b981; box-shadow: 0 0 10px #10b981; }
@@ -324,6 +269,44 @@
     100% { background-position: 200% 0; }
 }
 
+/* 新增：额外信息样式 */
+.extra-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.info-label {
+    font-size: 12px;
+    color: #cbd5e0;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffffff;
+    font-family: 'Courier New', monospace;
+}
+
+.temp-normal { color: #10b981; }
+.temp-warning { color: #f59e0b; }
+.temp-danger { color: #ef4444; }
+
+.memory-available { color: #3b82f6; }
+
 /* 响应式设计 */
 @media (max-width: 768px) {
     .status-cards {
@@ -339,6 +322,11 @@
     
     .metric-value {
         font-size: 36px;
+    }
+    
+    .extra-info {
+        flex-direction: column;
+        gap: 10px;
     }
 }
 </style>
@@ -362,6 +350,13 @@
                     <div class="progress-fill" style="width: 0%"></div>
                 </div>
             </div>
+            <div class="extra-info">
+                <div class="info-item">
+                    <div class="info-label">CPU温度</div>
+                    <div class="info-value temp-normal">--°C</div>
+                </div>
+                <div class="status-badge">正常</div>
+            </div>
         </div>
         
         <div class="status-card memory loading">
@@ -375,6 +370,13 @@
                 <div class="progress-bar">
                     <div class="progress-fill" style="width: 0%"></div>
                 </div>
+            </div>
+            <div class="extra-info">
+                <div class="info-item">
+                    <div class="info-label">剩余内存</div>
+                    <div class="info-value memory-available">-- MB</div>
+                </div>
+                <div class="status-badge">正常</div>
             </div>
         </div>
         
@@ -400,20 +402,20 @@
     </div>
     
     <!-- 快速操作按钮 -->
-<div class="quick-actions">
-    <button class="action-btn refresh-btn" onclick="refreshStatus()">
-        <span class="btn-icon"></span>刷新状态
-    </button>
-    <a class="action-btn system-btn" href="<%=luci.dispatcher.build_url('admin/system/system')%>">
-        <span class="btn-icon"></span>系统设置
-    </a>
-    <a class="action-btn network-btn" href="<%=luci.dispatcher.build_url('admin/network/network')%>">
-        <span class="btn-icon"></span>网络设置
-    </a>
-    <a class="action-btn reboot-btn" href="<%=luci.dispatcher.build_url('admin/system/reboot')%>">
-        <span class="btn-icon"></span>重启系统
-    </a>
-</div>
+    <div class="quick-actions">
+        <button class="action-btn refresh-btn" onclick="refreshStatus()">
+            <span class="btn-icon"></span>刷新状态
+        </button>
+        <a class="action-btn system-btn" href="<%=luci.dispatcher.build_url('admin/system/system')%>">
+            <span class="btn-icon"></span>系统设置
+        </a>
+        <a class="action-btn network-btn" href="<%=luci.dispatcher.build_url('admin/network/network')%>">
+            <span class="btn-icon"></span>网络设置
+        </a>
+        <a class="action-btn reboot-btn" href="<%=luci.dispatcher.build_url('admin/system/reboot')%>">
+            <span class="btn-icon"></span>重启系统
+        </a>
+    </div>
     
     <!-- 刷新信息 -->
     <div class="refresh-info" id="refresh-info">
@@ -425,6 +427,33 @@
 <script>
 let autoRefreshInterval;
 
+// 获取CPU温度的函数
+function getCpuTemperature() {
+    return fetch('<%=luci.dispatcher.build_url("admin/status/hardware_monitor/cpu_temp")%>')
+        .then(response => response.text())
+        .then(temp => {
+            let tempValue = parseInt(temp.trim());
+            return isNaN(tempValue) ? null : tempValue;
+        })
+        .catch(error => {
+            console.error('获取CPU温度失败:', error);
+            return null;
+        });
+}
+
+// 获取内存详细信息的函数
+function getMemoryInfo() {
+    return fetch('<%=luci.dispatcher.build_url("admin/status/hardware_monitor/memory_info")%>')
+        .then(response => response.json())
+        .then(data => {
+            return data;
+        })
+        .catch(error => {
+            console.error('获取内存信息失败:', error);
+            return null;
+        });
+}
+
 function updateStatusCards(data) {
     // 移除加载动画
     document.querySelectorAll('.loading').forEach(el => {
@@ -435,42 +464,105 @@ function updateStatusCards(data) {
     const cpuCard = document.querySelector('.status-card.cpu');
     const cpuValue = cpuCard.querySelector('.metric-value');
     const cpuProgress = cpuCard.querySelector('.progress-fill');
+    const cpuTemp = cpuCard.querySelector('.info-value.temp-normal');
+    const cpuBadge = cpuCard.querySelector('.status-badge');
     const cpuPercent = data.load_percentage;
     
     cpuValue.textContent = cpuPercent + '%';
     cpuProgress.style.width = cpuPercent + '%';
     
     // 设置CPU颜色
+    let cpuStatus = '正常';
     if (cpuPercent > 80) {
         cpuProgress.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
         cpuCard.style.borderLeftColor = '#ef4444';
+        cpuStatus = '高负载';
     } else if (cpuPercent > 60) {
         cpuProgress.style.background = 'linear-gradient(135deg, #f59e0b, #d97706)';
         cpuCard.style.borderLeftColor = '#f59e0b';
+        cpuStatus = '中等负载';
     } else {
         cpuProgress.style.background = 'linear-gradient(135deg, #10b981, #059669)';
         cpuCard.style.borderLeftColor = '#10b981';
     }
     
+    // 获取并显示CPU温度
+    getCpuTemperature().then(temp => {
+        let tempClass = 'temp-normal';
+        let displayTemp = 'N/A';
+        
+        if (temp !== null) {
+            displayTemp = temp + '°C';
+            
+            // 设置温度颜色和状态
+            if (temp > 75) {
+                tempClass = 'temp-danger';
+                cpuStatus = '温度过高';
+            } else if (temp > 60) {
+                tempClass = 'temp-warning';
+                if (cpuStatus === '正常') cpuStatus = '温度警告';
+            }
+        } else {
+            displayTemp = 'N/A';
+        }
+        
+        cpuTemp.textContent = displayTemp;
+        cpuTemp.className = 'info-value ' + tempClass;
+        cpuBadge.textContent = cpuStatus;
+        cpuBadge.className = 'status-badge ' + 
+            (cpuStatus.includes('高') || cpuStatus.includes('过高') ? 'badge-danger' : 
+             cpuStatus.includes('警告') || cpuStatus.includes('中等') ? 'badge-warning' : 'badge-normal');
+    });
+    
     // 更新内存状态
     const memoryCard = document.querySelector('.status-card.memory');
     const memoryValue = memoryCard.querySelector('.metric-value');
     const memoryProgress = memoryCard.querySelector('.progress-fill');
+    const memoryAvailable = memoryCard.querySelector('.info-value.memory-available');
+    const memoryBadge = memoryCard.querySelector('.status-badge');
     const memoryPercent = data.memory_usage;
     
     memoryValue.textContent = memoryPercent + '%';
     memoryProgress.style.width = memoryPercent + '%';
     
+    let memoryStatus = '正常';
     if (memoryPercent > 80) {
         memoryProgress.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
         memoryCard.style.borderLeftColor = '#ef4444';
+        memoryStatus = '内存紧张';
     } else if (memoryPercent > 60) {
         memoryProgress.style.background = 'linear-gradient(135deg, #f59e0b, #d97706)';
         memoryCard.style.borderLeftColor = '#f59e0b';
+        memoryStatus = '内存较高';
     } else {
         memoryProgress.style.background = 'linear-gradient(135deg, #3b82f6, #1d4ed8)';
         memoryCard.style.borderLeftColor = '#3b82f6';
     }
+    
+    // 获取并显示剩余内存
+    getMemoryInfo().then(memoryData => {
+        let displayMemory = 'N/A';
+        
+        if (memoryData && memoryData.available_mb !== undefined) {
+            // 如果后端返回的是KB，转换为MB
+            let availableMB = memoryData.available_mb;
+            if (availableMB > 10000) { // 如果值很大，可能是KB，需要除以1024
+                availableMB = Math.round(availableMB / 1024);
+            }
+            displayMemory = availableMB + ' MB';
+        } else {
+            // 如果没有专门的内存接口，使用估算
+            const totalMemory = 512; // 假设总内存为512MB，您可以根据实际情况调整
+            const availableMemory = Math.round(totalMemory * (100 - memoryPercent) / 100);
+            displayMemory = availableMemory + ' MB';
+        }
+        
+        memoryAvailable.textContent = displayMemory;
+        memoryBadge.textContent = memoryStatus;
+        memoryBadge.className = 'status-badge ' + 
+            (memoryStatus.includes('紧张') ? 'badge-danger' : 
+             memoryStatus.includes('较高') ? 'badge-warning' : 'badge-normal');
+    });
     
     // 更新网络状态
     const networkCard = document.querySelector('.status-card.network');
