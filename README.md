@@ -88,7 +88,7 @@ ssh root@192.168.1.1 "/etc/init.d/uhttpd restart"
 
 1. **下载预编译IPK**
 ```bash
-wget https://github.com/Aurelius1688/luci-app-hardware-monitor/releases/download/ZIP/luci-app-hardware-monitor_1.1-2_all.ipk
+wget https://github.com/Aurelius1688/luci-app-hardware-monitor/releases/download/ZIP/luci-app-hardware-monitor_1.1-r1_all.ipk
 ```
 
 2. **安装依赖**
