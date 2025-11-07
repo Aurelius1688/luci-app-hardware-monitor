@@ -1,4 +1,5 @@
-<img width="1903" height="799" alt="image" src="https://github.com/user-attachments/assets/031816ee-be68-48ea-a10f-96c75edce023" />
+<img width="1642" height="784" alt="image" src="https://github.com/user-attachments/assets/2db8f403-6430-48a5-a8e9-f445f8970350" />
+
 
 # LuCI 硬件监控插件 - 开源文档
 
