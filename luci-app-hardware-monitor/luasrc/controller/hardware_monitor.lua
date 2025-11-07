@@ -98,7 +98,7 @@ function get_cpu_temperature()
     end
     
     -- 如果都无法获取，返回默认值
-    lucihttp.write("45")
+    lucihttp.write("N/A")
 end
 
 function get_memory_info()
