@@ -99,7 +99,7 @@ opkg install luci-compat iptables netstat-nat
 
 3. **安装插件**
 ```bash
-opkg install luci-app-hardware-monitor_1.1-2_all.ipk
+opkg install luci-app-hardware-monitor_1.1-r1_all.ipk
 /etc/init.d/uhttpd restart
 ```
 
