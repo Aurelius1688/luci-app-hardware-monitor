@@ -48,14 +48,25 @@ luci-app-hardware-monitor/
 
 ### 方法一：源码集成编译
 
-1. **克隆或下载插件源码**
-```bash
-cd /path/to/openwrt/package
-git clone https://github.com/Aurelius1688/luci-app-hardware-monitor.git
+**下载对应的 SDK**
+
+- 访问 [https://downloads.openwrt.org/releases/](https://downloads.openwrt.org/releases/)你的版本/targets/你的平台/
+- 例如，对于 `24.10.4` 和 `x86_64`，下载：
+  `immortalwrt-sdk-24.10.4-x86-generic_gcc-13.3.0_musl.Linux-x86_64.tar.zst`
+- 解压命令:`tar --zstd -xf immortalwrt-sdk-24.10.4-x86-generic_gcc-13.3.0_musl.Linux-x86_64.tar.zst`
+- 将其下载到你的 Linux 开发机。
+
+**安装开发机依赖**
+bash
+
+```
+sudo apt update
+sudo apt install build-essential ccache file gawk gettext git libncurses5-dev libssl-dev python3 python3-setuptools rsync unzip wget
 ```
 
 2. **配置编译选项**
 ```bash
+cd immortalwrt-sdk-24.10.4-x86-generic_gcc-13.3.0_musl.Linux-x86_64
 make menuconfig
 ```
 导航到：
