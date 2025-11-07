@@ -64,7 +64,7 @@ sudo apt update
 sudo apt install build-essential ccache file gawk gettext git libncurses5-dev libssl-dev python3 python3-setuptools rsync unzip wget
 ```
 
-2. **配置编译选项**
+**配置编译选项**
 ```bash
 cd immortalwrt-sdk-24.10.4-x86-generic_gcc-13.3.0_musl.Linux-x86_64
 make menuconfig
