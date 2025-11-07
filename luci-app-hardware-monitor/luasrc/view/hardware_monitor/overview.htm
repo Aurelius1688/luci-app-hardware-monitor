@@ -18,6 +18,9 @@
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 320px; /* 固定高度确保所有卡片统一 */
 }
 
 .status-card::before {
@@ -56,6 +59,7 @@
     display: flex;
     align-items: center;
     margin-bottom: 20px;
+    flex-shrink: 0; /* 防止头部被压缩 */
 }
 
 .card-icon {
@@ -69,6 +73,7 @@
     font-size: 20px;
     font-weight: bold;
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    flex-shrink: 0;
 }
 
 .cpu-icon { background: rgba(16, 185, 129, 0.2); color: #10b981; }
@@ -82,6 +87,7 @@
     font-weight: 600;
     color: #f7fafc;
     text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    line-height: 1.2;
 }
 
 .metric-value {
@@ -91,6 +97,12 @@
     color: #ffffff;
     text-shadow: 0 2px 8px rgba(0,0,0,0.5);
     font-family: 'Courier New', monospace;
+    line-height: 1;
+    min-height: 50px; /* 固定高度确保数值对齐 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 }
 
 .metric-label {
@@ -100,6 +112,12 @@
     text-transform: uppercase;
     letter-spacing: 1px;
     font-weight: 500;
+    line-height: 1.2;
+    min-height: 20px; /* 固定标签高度 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 }
 
 .progress-container {
@@ -108,6 +126,7 @@
     padding: 3px;
     margin: 15px 0;
     border: 1px solid rgba(255,255,255,0.1);
+    flex-shrink: 0;
 }
 
 .progress-bar {
@@ -144,16 +163,21 @@
 }
 
 .status-badge {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     padding: 8px 16px;
     border-radius: 25px;
     font-size: 13px;
     font-weight: bold;
-    margin-top: 15px;
     text-transform: uppercase;
     letter-spacing: 1px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     border: 1px solid rgba(255,255,255,0.2);
+    min-height: 36px; /* 固定徽章高度 */
+    min-width: 80px; /* 固定徽章最小宽度 */
+    text-align: center;
+    flex-shrink: 0;
 }
 
 .badge-normal { 
@@ -180,6 +204,7 @@
 .action-btn {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     margin: 0 12px;
     padding: 14px 28px;
     background: linear-gradient(135deg, #3b82f6, #1d4ed8);
@@ -192,6 +217,7 @@
     font-weight: 600;
     box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
     border: 1px solid rgba(255,255,255,0.1);
+    min-height: 48px; /* 固定按钮高度 */
 }
 
 .action-btn::before {
@@ -219,6 +245,10 @@
     background: rgba(255,255,255,0.05);
     border-radius: 10px;
     border: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px; /* 固定信息区域高度 */
 }
 
 .status-indicator {
@@ -227,6 +257,7 @@
     height: 12px;
     border-radius: 50%;
     margin-right: 8px;
+    flex-shrink: 0;
 }
 
 .btn-icon {
@@ -274,9 +305,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 15px;
+    margin-top: auto; /* 推到卡片底部 */
     padding-top: 15px;
     border-top: 1px solid rgba(255,255,255,0.1);
+    flex-shrink: 0;
 }
 
 .info-item {
@@ -284,6 +316,8 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
+    justify-content: center;
+    min-height: 50px; /* 固定信息项高度 */
 }
 
 .info-label {
@@ -292,6 +326,10 @@
     margin-bottom: 5px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    line-height: 1.2;
+    min-height: 16px; /* 固定标签高度 */
+    display: flex;
+    align-items: center;
 }
 
 .info-value {
@@ -299,6 +337,10 @@
     font-weight: bold;
     color: #ffffff;
     font-family: 'Courier New', monospace;
+    line-height: 1.2;
+    min-height: 20px; /* 固定数值高度 */
+    display: flex;
+    align-items: center;
 }
 
 .temp-normal { color: #10b981; }
@@ -307,6 +349,20 @@
 
 .memory-available { color: #3b82f6; }
 
+/* 网络和防火墙卡片的特殊样式 */
+.status-card.network .metric-value,
+.status-card.firewall .metric-value {
+    min-height: 60px; /* 网络状态需要更高空间容纳图标 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.status-card.network .status-badge,
+.status-card.firewall .status-badge {
+    margin-top: 20px; /* 与其他卡片底部对齐 */
+}
+
 /* 响应式设计 */
 @media (max-width: 768px) {
     .status-cards {
@@ -314,19 +370,30 @@
         gap: 15px;
     }
     
+    .status-card {
+        height: auto; /* 移动端取消固定高度 */
+        min-height: 300px;
+    }
+    
     .action-btn {
         margin: 5px;
         padding: 12px 20px;
         font-size: 14px;
+        min-height: 44px;
     }
     
     .metric-value {
         font-size: 36px;
+        min-height: 45px;
     }
     
     .extra-info {
         flex-direction: column;
         gap: 10px;
+    }
+    
+    .info-item {
+        min-height: 45px;
     }
 }
 </style>
