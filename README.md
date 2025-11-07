@@ -50,7 +50,7 @@ luci-app-hardware-monitor/
 
 **下载对应的 SDK**
 
-- 访问 https://downloads.immortalwrt.org/releases/24.10.4/targets/x86/generic/immortalwrt-sdk-24.10.4-x86-generic_gcc-13.3.0_musl.Linux-x86_64.tar.zst你的版本/targets/你的平台/
+- 访问 [https://downloads.immortalwrt.org/releases/24.10.4/targets/x86/generic/immortalwrt-sdk-24.10.4-x86-generic_gcc-13.3.0_musl.Linux-x86_64.tar.zst] 下载不同平台的SDK
 - 例如，对于 `24.10.4` 和 `x86_64`，下载：
   `immortalwrt-sdk-24.10.4-x86-generic_gcc-13.3.0_musl.Linux-x86_64.tar.zst`
 - 解压命令:`tar --zstd -xf immortalwrt-sdk-24.10.4-x86-generic_gcc-13.3.0_musl.Linux-x86_64.tar.zst`
